@@ -1,98 +1,92 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 Smart CRM API (Technical Challenge)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> High-performance Backend API for Lead Management featuring Asynchronous AI Processing, Distributed Caching, and Background Jobs.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white)
 
-## Description
+## 📋 Overview
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This project implements a robust backend architecture for a CRM system. It goes beyond simple CRUD operations by implementing **Event-Driven Architecture** principles to handle resource-intensive tasks (AI Summarization) without blocking the main thread.
 
-## Project setup
+### Key Features
+* **⚡ Non-Blocking AI Processing:** Uses **Bull (Queue)** and **Redis** to offload Gemini AI interactions to background workers.
+* **🐢/⚡ Caching Strategy:** Implements a **Read-Through Cache** mechanism using Redis to minimize database hits and reduce latency.
+* **🤖 Automated Sync:** A **Cron Job** periodically fetches and deduplicates leads from external APIs.
+* **🛡️ Security:** Protected endpoints via custom **API Key Guards**.
+* **🐳 Containerized:** Fully dockerized environment (App + DB + Redis) for easy deployment.
+
+## 🛠️ Architecture Decisions
+
+| Component | Technology | Why? |
+| :--- | :--- | :--- |
+| **Framework** | NestJS | Modular architecture, dependency injection, and TypeScript support. |
+| **Database** | PostgreSQL + TypeORM | Relational integrity and robust ORM for data management. |
+| **Queues** | Bull + Redis | To decouple the User Interface from slow AI tasks (Gemini API takes ~3-5s). Ensures immediate API response. |
+| **Cache** | Redis | To serve frequently accessed Lead data instantly (sub-millisecond latency). |
+| **AI** | Google Gemini | Generates intelligent summaries and "Next Best Action" suggestions for sales leads. |
+
+## 🚀 Getting Started
+
+### Prerequisites
+* Node.js (v18+)
+* Docker & Docker Compose
+* Git
+
+### 1. Clone the repository
+```bash
+git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
+cd YOUR_REPO_NAME 
+```
+2. Environment Configuration
+Create a .env file in the root directory. You can use the example below:
 
 ```bash
-$ npm install
+# Database (Docker Service Name: postgres)
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/leads_db
+
+# Redis (Docker Service Name: redis)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# Security
+API_SECRET_KEY=my-super-secret-key-123
+
+# AI Service
+GEMINI_API_KEY=your_google_gemini_api_key_here
 ```
 
-## Compile and run the project
+3. Run with Docker 
+This command will start PostgreSQL and Redis containers automatically.
 
 ```bash
-# development
-$ npm run start
+# Start infrastructure (DB + Redis)
+docker-compose up -d
 
-# watch mode
-$ npm run start:dev
+# Install dependencies
+npm install
 
-# production mode
-$ npm run start:prod
+# Run the application in development mode
+npm run start:dev
 ```
 
-## Run tests
+The API will be available at http://localhost:3000
 
-```bash
-# unit tests
-$ npm run test
+API Endpoints: All requests require the header x-api-key: my-super-secret-key-123
 
-# e2e tests
-$ npm run test:e2e
+Testing the Async Architecture
+Create a Lead via POST /create-lead.
 
-# test coverage
-$ npm run test:cov
-```
+Request Summary via POST /leads/:id/summarize.
 
-## Deployment
+Observation: The API responds immediately with status processing.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Background: The Worker picks up the job, calls Gemini AI, and updates the DB.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Check Result via GET /leads/:id.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Observation: The summary and next_action fields are now populated.
