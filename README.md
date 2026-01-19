@@ -39,8 +39,8 @@ This project implements a robust backend architecture for a CRM system. It goes 
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
-cd YOUR_REPO_NAME 
+git clone (https://github.com/yanarios/contactship-mini.git)
+cd contactship-mini
 ```
 2. Environment Configuration
 Create a .env file in the root directory. You can use the example below:
@@ -54,7 +54,7 @@ REDIS_HOST=localhost
 REDIS_PORT=6379
 
 # Security
-API_SECRET_KEY=my-super-secret-key-123
+(ejemplo) API_SECRET_KEY=my-super-secret-key-123
 
 # AI Service
 GEMINI_API_KEY=your_google_gemini_api_key_here
