@@ -76,17 +76,26 @@ npm run start:dev
 
 The API will be available at http://localhost:3000
 
-API Endpoints: All requests require the header x-api-key: my-super-secret-key-123
+## 🔌 API Endpoints
 
-Testing the Async Architecture
-Create a Lead via POST /create-lead.
+> **Note:** All requests require the header `x-api-key: secret123`
 
-Request Summary via POST /leads/:id/summarize.
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/create-lead` | Register a new lead manually. |
+| `GET` | `/leads` | List all leads. |
+| `GET` | `/leads/:id` | Get lead details (Uses Cache). |
+| `POST` | `/leads/:id/summarize` | **Async:** Triggers AI processing background job. |
 
-Observation: The API responds immediately with status processing.
+## 🧪 Testing the Async Architecture
 
-Background: The Worker picks up the job, calls Gemini AI, and updates the DB.
+1.  **Create a Lead** via `POST /create-lead`.
+2.  **Request Summary** via `POST /leads/:id/summarize`.
+    * *Observation:* The API responds **immediately** with status `processing`.
+    * *Background:* The Worker picks up the job, calls Gemini AI, and updates the DB.
+3.  **Check Result** via `GET /leads/:id`.
+    * *Observation:* The `summary` and `next_action` fields are now populated.
 
-Check Result via GET /leads/:id.
 
-Observation: The summary and next_action fields are now populated.
+
+RIOS YANINA GISELE
